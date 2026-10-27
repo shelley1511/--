@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音的四种特性 · 交互式教学</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            user-select: none;
+        }
+        body {
+            background: linear-gradient(145deg, #1a1e2b 0%, #2b3040 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 20px;
+        }
+        .main-card {
+            background: rgba(22, 26, 38, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 2.5rem;
+            padding: 2rem 2rem 1.6rem 2rem;
+            box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+            width: fit-content;
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 215, 120, 0.15);
+        }
+        h1 {
+            color: #ffd966;
+            font-weight: 500;
+            font-size: 1.9rem;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-bottom: 0.3rem;
+            text-shadow: 0 2px 8px rgba(255, 200, 50, 0.3);
+        }
+        .subhead {
+            text-align: center;
+            color: #b0b8d0;
+            margin-bottom: 1.8rem;
+            font-size: 1rem;
+            border-bottom: 1px solid rgba(255, 210, 90, 0.2);
+            padding-bottom: 0.7rem;
+        }
+        .audio-hint {
+            font-size: 0.8rem;
+            color: #ffbe5c;
+            background: #2a241b;
+            padding: 0.2rem 0.9rem;
+            border-radius: 30px;
+            display: inline-block;
+            margin-left: 10px;
+            border: 1px solid #7a5e2e;
+        }
+
+        /* ---------- 四特性网格 ---------- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.6rem;
+            margin-bottom: 1.4rem;
+        }
+        @media (max-width: 800px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-card {
+            background: #0e111b;
+            border-radius: 1.8rem;
+            padding: 1.4rem 1.4rem 1.2rem 1.4rem;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 12px 25px -8px black;
+            border: 1px solid rgba(255, 215, 120, 0.08);
+            transition: border-color 0.2s;
+        }
+        .feature-card:hover {
+            border-color: rgba(255, 215, 120, 0.25);
+        }
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.9rem;
+        }
+        .feature-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+            filter: drop-shadow(0 0 8px rgba(255, 200, 80, 0.4));
+        }
+        .feature-title {
+            color: #ffd966;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .feature-desc {
+            color: #9aa5c1;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0.9rem;
+            min-height: 2.4rem;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 110px;
+            border-radius: 1rem;
+            background: #0a0d14;
+            box-shadow: 0 0 0 1px #2f3547, 0 8px 16px -5px black;
+            margin-bottom: 0.9rem;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .control-row label {
+            color: #b9c2dd;
+            font-size: 0.85rem;
+            min-width: 60px;
+        }
+        .control-row input[type="range"] {
+            flex: 1;
+            min-width: 120px;
+            accent-color: #ffb347;
+            cursor: pointer;
+            height: 4px;
+            border-radius: 4px;
+            background: #2a3040;
+        }
+        .value-badge {
+            background: #1e2433;
+            padding: 2px 10px;
+            border-radius: 20px;
+            color: #ffd966;
+            font-size: 0.8rem;
+            font-weight: 500;
+            min-width: 60px;
+            text-align: center;
+            border: 1px solid #3a4055;
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #252b3b;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #cdd6f0;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #0f121b, 0 3px 8px rgba(0,0,0,0.4);
+            transition: 0.08s linear;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #3e465e;
+        }
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #0f121b, 0 3px 8px rgba(0,0,0,0.4);
+        }
+        .btn.active {
+            background: #3e4b6b;
+            color: #fff5cf;
+            border-color: #ffd966;
+            box-shadow: 0 0 10px #ffbe3f55, 0 4px 0 #0f121b;
+        }
+        .btn.audio-off {
+            background: #2e2a3a;
+            border-color: #6b5b7a;
+            color: #b0a8c0;
+        }
+        .btn.play-btn {
+            background: #2a4a3a;
+            border-color: #5cb87a;
+            color: #b8f0c8;
+        }
+        .btn.play-btn.active {
+            background: #3a6a4a;
+            border-color: #7ee0a0;
+            color: #e0ffe8;
+            box-shadow: 0 0 10px #5cb87a55, 0 4px 0 #0f121b;
+        }
+
+        /* 底部提示 */
+        .global-hint {
+            text-align: center;
+            color: #7e86a0;
+            font-size: 0.82rem;
+            font-style: italic;
+            margin-top: 0.6rem;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* 音色选择按钮组 */
+        .timbre-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .timbre-btn {
+            background: #1e2433;
+            border: 1px solid #3a4055;
+            border-radius: 2rem;
+            padding: 0.35rem 0.9rem;
+            font-size: 0.8rem;
+            color: #b9c2dd;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .timbre-btn:hover {
+            background: #2a3040;
+        }
+        .timbre-btn.active {
+            background: #3e4b6b;
+            border-color: #ffd966;
+            color: #fff5cf;
+            box-shadow: 0 0 10px #ffbe3f33;
+        }
+
+        /* 音长节奏显示点 */
+        .rhythm-dots {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+            margin-top: 0.3rem;
+        }
+        .rhythm-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #3a4055;
+            transition: background 0.1s, box-shadow 0.1s;
+        }
+        .rhythm-dot.active {
+            background: #ffd966;
+            box-shadow: 0 0 10px #ffd966;
+        }
+    </style>
+</head>
+<body>
+<div class="main-card">
+    <h1>🎵 音的四种特性 · 交互式教学</h1>
+    <div class="subhead">
+        音量 · 音高 · 音色 · 音长 — 拖动滑块，感受声音的变化
+        <span class="audio-hint">🔊 点击页面任意处激活音频</span>
+    </div>
+
+    <div class="features-grid">
+        <!-- ============ 1. 音量 (强弱) ============ -->
+        <div class="feature-card" id="cardVolume">
+            <div class="feature-header">
+                <span class="feature-icon">🔊</span>
+                <span class="feature-title">音量（强弱）</span>
+            </div>
+            <div class="feature-desc">
+                由发音体振动的<strong style="color:#ffd966;">幅度</strong>大小决定。振幅大，音则强；振幅小，音则弱。
+            </div>
+            <canvas id="volumeCanvas" width="440" height="110"></canvas>
+            <div class="control-row">
+                <label>振幅</label>
+                <input type="range" id="volumeSlider" min="0" max="100" value="50" step="1">
+                <span class="value-badge" id="volumeValue">50%</span>
+            </div>
+            <div class="btn-row">
+                <button class="btn play-btn" id="volumePlayBtn">▶️ 试听</button>
+                <button class="btn audio-off" id="volumeAudioBtn">🔇 音频关</button>
+            </div>
+        </div>
+
+        <!-- ============ 2. 音高 (高低) ============ -->
+        <div class="feature-card" id="cardPitch">
+            <div class="feature-header">
+                <span class="feature-icon">🎼</span>
+                <span class="feature-title">音高（高低）</span>
+            </div>
+            <div class="feature-desc">
+                由发音体振动的<strong style="color:#ffd966;">频率</strong>决定。频率高，音则高；频率低，音则低。
+            </div>
+            <canvas id="pitchCanvas" width="440" height="110"></canvas>
+            <div class="control-row">
+                <label>频率</label>
+                <input type="range" id="pitchSlider" min="0" max="100" value="50" step="1">
+                <span class="value-badge" id="pitchValue">440 Hz</span>
+            </div>
+            <div class="btn-row">
+                <button class="btn play-btn" id="pitchPlayBtn">▶️ 试听</button>
+                <button class="btn audio-off" id="pitchAudioBtn">🔇 音频关</button>
+            </div>
+        </div>
+
+        <!-- ============ 3. 音色 (色彩) ============ -->
+        <div class="feature-card" id="cardTimbre">
+            <div class="feature-header">
+                <span class="feature-icon">🎨</span>
+                <span class="feature-title">音色（色彩）</span>
+            </div>
+            <div class="feature-desc">
+                由发音体的<strong style="color:#ffd966;">材质与形状</strong>决定，是不同乐器或人声区分的关键。
+            </div>
+            <canvas id="timbreCanvas" width="440" height="110"></canvas>
+            <div class="control-row">
+                <label>波形</label>
+                <div class="timbre-group" id="timbreGroup">
+                    <button class="timbre-btn active" data-wave="sine">正弦波</button>
+                    <button class="timbre-btn" data-wave="triangle">三角波</button>
+                    <button class="timbre-btn" data-wave="sawtooth">锯齿波</button>
+                    <button class="timbre-btn" data-wave="square">方波</button>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn play-btn" id="timbrePlayBtn">▶️ 试听</button>
+                <button class="btn audio-off" id="timbreAudioBtn">🔇 音频关</button>
+            </div>
+        </div>
+
+        <!-- ============ 4. 音长 (长短) ============ -->
+        <div class="feature-card" id="cardDuration">
+            <div class="feature-header">
+                <span class="feature-icon">⏳</span>
+                <span class="feature-title">音长（长短）</span>
+            </div>
+            <div class="feature-desc">
+                由发音体振动的<strong style="color:#ffd966;">持续时间</strong>决定。振动持续久，音则长。
+            </div>
+            <canvas id="durationCanvas" width="440" height="110"></canvas>
+            <div class="control-row">
+                <label>时长</label>
+                <input type="range" id="durationSlider" min="1" max="100" value="50" step="1">
+                <span class="value-badge" id="durationValue">1.0 s</span>
+            </div>
+            <div class="rhythm-dots" id="rhythmDots"></div>
+            <div class="btn-row">
+                <button class="btn play-btn" id="durationPlayBtn">▶️ 试听</button>
+                <button class="btn audio-off" id="durationAudioBtn">🔇 音频关</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="global-hint">
+        <span>💡 每个特性独立控制，互不干扰</span>
+        <span>🎧 建议佩戴耳机，感受更细腻</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ==================== 全局音频上下文 ====================
+        let audioCtx = null;
+        let masterGain = null;
+
+        // 每个特性的音频状态
+        const audioState = {
+            volume: { on: false, gain: null, osc: null },
+            pitch: { on: false, gain: null, osc: null },
+            timbre: { on: false, gain: null, osc: null },
+            duration: { on: false, gain: null, osc: null, timeoutId: null }
+        };
+
+        // 每个特性的视觉状态
+        const visualState = {
+            volume: { amplitude: 0.5, phase: 0 },
+            pitch: { freq: 440, phase: 0 },
+            timbre: { waveType: 'sine', phase: 0 },
+            duration: { duration: 1.0, progress: 0, playing: false }
+        };
+
+        // ==================== 画布初始化 ====================
+        const volumeCanvas = document.getElementById('volumeCanvas');
+        const pitchCanvas = document.getElementById('pitchCanvas');
+        const timbreCanvas = document.getElementById('timbreCanvas');
+        const durationCanvas = document.getElementById('durationCanvas');
+        const volumeCtx = volumeCanvas.getContext('2d');
+        const pitchCtx = pitchCanvas.getContext('2d');
+        const timbreCtx = timbreCanvas.getContext('2d');
+        const durationCtx = durationCanvas.getContext('2d');
+
+        const CW = 440, CH = 110;
+
+        // ==================== 音频初始化 ====================
+        function initAudio() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                masterGain = audioCtx.createGain();
+                masterGain.gain.value = 0.6;
+                masterGain.connect(audioCtx.destination);
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().catch(e => console.warn(e));
+                }
+            } catch (e) {
+                console.warn('Web Audio 初始化失败:', e);
+            }
+        }
+
+        // 首次点击页面激活
+        function enableAudioOnFirstClick() {
+            if (!audioCtx) {
+                initAudio();
+            } else if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            document.removeEventListener('click', enableAudioOnFirstClick);
+        }
+        document.addEventListener('click', enableAudioOnFirstClick);
+
+        // ==================== 音量特性 ====================
+        function drawVolume() {
+            const ctx = volumeCtx;
+            ctx.clearRect(0, 0, CW, CH);
+            // 背景
+            ctx.fillStyle = '#0a0d14';
+            ctx.fillRect(0, 0, CW, CH);
+            // 中线
+            ctx.beginPath();
+            ctx.moveTo(0, CH/2);
+            ctx.lineTo(CW, CH/2);
+            ctx.strokeStyle = '#2a3142';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+            // 网格
+            for (let x = 0; x < CW; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, CH);
+                ctx.strokeStyle = '#1a1f2c';
+                ctx.stroke();
+            }
+            // 波形
+            const amp = visualState.volume.amplitude * (CH/2 - 8);
+            const phase = visualState.volume.phase;
+            ctx.beginPath();
+            ctx.strokeStyle = '#ffb347';
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = '#ffb347';
+            ctx.shadowBlur = 12;
+            ctx.lineJoin = 'round';
+            for (let x = 0; x <= CW; x++) {
+                const angle = (x / CW) * Math.PI * 2 * 3 + phase;
+                const y = CH/2 + Math.sin(angle) * amp;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            // 振幅标注线
+            ctx.beginPath();
+            ctx.setLineDash([3, 3]);
+            ctx.moveTo(0, CH/2 - amp);
+            ctx.lineTo(CW, CH/2 - amp);
+            ctx.strokeStyle = '#ffb34755';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, CH/2 + amp);
+            ctx.lineTo(CW, CH/2 + amp);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // ==================== 音高特性 ====================
+        function drawPitch() {
+            const ctx = pitchCtx;
+            ctx.clearRect(0, 0, CW, CH);
+            ctx.fillStyle = '#0a0d14';
+            ctx.fillRect(0, 0, CW, CH);
+            ctx.beginPath();
+            ctx.moveTo(0, CH/2);
+            ctx.lineTo(CW, CH/2);
+            ctx.strokeStyle = '#2a3142';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+            for (let x = 0; x < CW; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, CH);
+                ctx.strokeStyle = '#1a1f2c';
+                ctx.stroke();
+            }
+            const amp = CH/2 - 12;
+            const phase = visualState.pitch.phase;
+            // 显示 3 个周期的视觉波形，但频率越高越密
+            const cycles = 2 + (visualState.pitch.freq - 200) / 400 * 5; // 200Hz -> 2周期, 800Hz -> 7周期
+            ctx.beginPath();
+            ctx.strokeStyle = '#4cc9f0';
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = '#4cc9f0';
+            ctx.shadowBlur = 12;
+            ctx.lineJoin = 'round';
+            for (let x = 0; x <= CW; x++) {
+                const angle = (x / CW) * Math.PI * 2 * cycles + phase;
+                const y = CH/2 + Math.sin(angle) * amp;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            // 标注文字
+            ctx.fillStyle = '#4cc9f088';
+            ctx.font = '11px "Segoe UI", sans-serif';
+            ctx.fillText(`频率: ${Math.round(visualState.pitch.freq)} Hz`, 10, 18);
+        }
+
+        // ==================== 音色特性 ====================
+        function drawTimbre() {
+            const ctx = timbreCtx;
+            ctx.clearRect(0, 0, CW, CH);
+            ctx.fillStyle = '#0a0d14';
+            ctx.fillRect(0, 0, CW, CH);
+            ctx.beginPath();
+            ctx.moveTo(0, CH/2);
+            ctx.lineTo(CW, CH/2);
+            ctx.strokeStyle = '#2a3142';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+            for (let x = 0; x < CW; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, CH);
+                ctx.strokeStyle = '#1a1f2c';
+                ctx.stroke();
+            }
+            const amp = CH/2 - 12;
+            const phase = visualState.timbre.phase;
+            const wave = visualState.timbre.waveType;
+            const cycles = 3;
+            ctx.beginPath();
+            ctx.strokeStyle = '#f72585';
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = '#f72585';
+            ctx.shadowBlur = 12;
+            ctx.lineJoin = 'round';
+            for (let x = 0; x <= CW; x++) {
+                const t = (x / CW) * cycles + phase / (Math.PI * 2);
+                let val = 0;
+                const tMod = t % 1;
+                switch (wave) {
+                    case 'sine':
+                        val = Math.sin(t * Math.PI * 2);
+                        break;
+                    case 'triangle':
+                        val = 4 * Math.abs(tMod - 0.5) - 1;
+                        break;
+                    case 'sawtooth':
+                        val = 2 * tMod - 1;
+                        break;
+                    case 'square':
+                        val = tMod < 0.5 ? 1 : -1;
+                        break;
+                    default:
+                        val = Math.sin(t * Math.PI * 2);
+                }
+                const y = CH/2 + val * amp;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+        }
+
+        // ==================== 音长特性 ====================
+        function drawDuration() {
+            const ctx = durationCtx;
+            ctx.clearRect(0, 0, CW, CH);
+            ctx.fillStyle = '#0a0d14';
+            ctx.fillRect(0, 0, CW, CH);
+            ctx.beginPath();
+            ctx.moveTo(0, CH/2);
+            ctx.lineTo(CW, CH/2);
+            ctx.strokeStyle = '#2a3142';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+            for (let x = 0; x < CW; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, CH);
+                ctx.strokeStyle = '#1a1f2c';
+                ctx.stroke();
+            }
+            const amp = CH/2 - 12;
+            const phase = visualState.duration.progress * Math.PI * 2 * 3;
+            const durationRatio = visualState.duration.duration; // 1..100 -> 归一化
+            // 波形长度随持续时间变化 (视觉上画一个衰减包络)
+            const activeWidth = visualState.duration.playing ? CW : CW * (durationRatio / 100);
+            ctx.beginPath();
+            ctx.strokeStyle = '#4cc9f0';
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = '#4cc9f0';
+            ctx.shadowBlur = 12;
+            ctx.lineJoin = 'round';
+            // 画整个波形，但是用亮度区分持续部分
+            for (let x = 0; x <= CW; x++) {
+                const angle = (x / CW) * Math.PI * 2 * 3 + phase;
+                const y = CH/2 + Math.sin(angle) * amp;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = '#4cc9f044';
+            ctx.stroke();
+            // 重新绘制活跃部分
+            ctx.beginPath();
+            for (let x = 0; x <= activeWidth; x++) {
+                const angle = (x / CW) * Math.PI * 2 * 3 + phase;
+                const y = CH/2 + Math.sin(angle) * amp;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = '#4cc9f0';
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // 时间刻度
+            ctx.fillStyle = '#4cc9f088';
+            ctx.font = '11px "Segoe UI", sans-serif';
+            ctx.fillText(`${visualState.duration.duration.toFixed(1)} s`, 10, 18);
+        }
+
+        // ==================== 动画循环 ====================
+        function animate() {
+            // 更新相位
+            visualState.volume.phase += 0.04;
+            visualState.pitch.phase += 0.04;
+            visualState.timbre.phase += 0.04;
+
+            if (visualState.duration.playing) {
+                visualState.duration.progress += 0.016 / visualState.duration.duration;
+                if (visualState.duration.progress >= 1) {
+                    visualState.duration.progress = 0;
+                    visualState.duration.playing = false;
+                    // 停止音长音频
+                    stopDurationAudio();
+                }
+            }
+
+            drawVolume();
+            drawPitch();
+            drawTimbre();
+            drawDuration();
+            requestAnimationFrame(animate);
+        }
+
+        // ==================== 音频播放控制 ====================
+        // 通用的音频启动/停止
+        function startAudioFor(type) {
+            if (!audioCtx) initAudio();
+            if (!audioCtx) return;
+
+            const state = audioState[type];
+            if (state.on) return; // 已经在播放
+
+            // 为不同特性创建不同的音频链
+            const gain = audioCtx.createGain();
+            gain.gain.value = 0;
+            gain.connect(masterGain);
+
+            let osc = null;
+
+            if (type === 'volume') {
+                osc = audioCtx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = 440;
+                osc.connect(gain);
+                osc.start();
+                // 音量根据滑块设置
+                const vol = parseFloat(document.getElementById('volumeSlider').value) / 100;
+                gain.gain.setTargetAtTime(vol * 0.5, audioCtx.currentTime, 0.02);
+            } else if (type === 'pitch') {
+                osc = audioCtx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = visualState.pitch.freq;
+                osc.connect(gain);
+                osc.start();
+                gain.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.02);
+            } else if (type === 'timbre') {
+                osc = audioCtx.createOscillator();
+                osc.type = visualState.timbre.waveType;
+                osc.frequency.value = 440;
+                osc.connect(gain);
+                osc.start();
+                gain.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.02);
+            } else if (type === 'duration') {
+                osc = audioCtx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = 440;
+                osc.connect(gain);
+                osc.start();
+                // 音长播放: 增益从0快速上升到0.4, 然后保持
+                gain.gain.setValueAtTime(0.0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 0.02);
+            }
+
+            state.on = true;
+            state.osc = osc;
+            state.gain = gain;
+
+            // 如果音频上下文挂起则恢复
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function stopAudioFor(type) {
+            const state = audioState[type];
+            if (!state.on) return;
+
+            if (state.osc) {
+                try { state.osc.stop(); } catch (e) {}
+                state.osc.disconnect();
+                state.osc = null;
+            }
+            if (state.gain) {
+                state.gain.disconnect();
+                state.gain = null;
+            }
+            state.on = false;
+        }
+
+        // 音长专用: 停止
+        function stopDurationAudio() {
+            stopAudioFor('duration');
+            visualState.duration.playing = false;
+            visualState.duration.progress = 0;
+            updateDurationUI();
+        }
+
+        // ==================== UI 绑定与更新 ====================
+
+        // 音量
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        const volumePlayBtn = document.getElementById('volumePlayBtn');
+        const volumeAudioBtn = document.getElementById('volumeAudioBtn');
+
+        volumeSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            visualState.volume.amplitude = val / 100;
+            volumeValue.textContent = val + '%';
+            // 如果正在播放，实时调整增益
+            if (audioState.volume.on && audioState.volume.gain && audioCtx) {
+                const targetGain = (val / 100) * 0.5;
+                audioState.volume.gain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.02);
+            }
+        });
+
+        volumePlayBtn.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (audioState.volume.on) {
+                stopAudioFor('volume');
+                volumePlayBtn.textContent = '▶️ 试听';
+                volumePlayBtn.classList.remove('active');
+            } else {
+                startAudioFor('volume');
+                volumePlayBtn.textContent = '⏹️ 停止';
+                volumePlayBtn.classList.add('active');
+            }
+        });
+
+        volumeAudioBtn.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (audioState.volume.on) {
+                stopAudioFor('volume');
+                volumePlayBtn.textContent = '▶️ 试听';
+                volumePlayBtn.classList.remove('active');
+            }
+            volumeAudioBtn.textContent = '🔊 音频开';
+            volumeAudioBtn.classList.remove('audio-off');
+            volumeAudioBtn.classList.add('active');
+        });
+
+        // 音高
+        const pitchSlider = document.getElementById('pitchSlider');
+        const pitchValue = document.getElementById('pitchValue');
+        const pitchPlayBtn = document.getElementById('pitchPlayBtn');
+        const pitchAudioBtn = document.getElementById('pitchAudioBtn');
+
+        // 将滑块0-100映射到频率 100Hz - 1200Hz (指数映射更符合听感)
+        function sliderToFreq(val) {
+            const minFreq = 100;
+            const maxFreq = 1200;
+            const ratio = val / 100;
+            return minFreq * Math.pow(maxFreq / minFreq, ratio);
+        }
+
+        pitchSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            const freq = sliderToFreq(val);
+            visualState.pitch.freq = freq;
+            pitchValue.textContent = Math.round(freq) + ' Hz';
+            if (audioState.pitch.on && audioState.pitch.osc && audioCtx) {
+                audioState.pitch.osc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.02);
+            }
+        });
+
+        // 初始化音高频率
+        visualState.pitch.freq = sliderToFreq(50);
+        pitchValue.textContent = Math.round(visualState.pitch.freq) + ' Hz';
+
+        pitchPlayBtn.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (audioState.pitch.on) {
+                stopAudioFor('pitch');
+                pitchPlayBtn.textContent = '▶️ 试听';
+                pitchPlayBtn.classList.remove('active');
+            } else {
+                startAudioFor('pitch');
+                pitchPlayBtn.textContent = '⏹️ 停止';
+                pitchPlayBtn.classList.add('active');
+            }
+        });
+
+        pitchAudioBtn.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (audioState.pitch.on) {
+                stopAudioFor('pitch');
+                pitchPlayBtn.textContent = '▶️ 试听';
+                pitchPlayBtn.classList.remove('active');
+            }
+            pitchAudioBtn.textContent = '🔊 音频开';
+            pitchAudioBtn.classList.remove('audio-off');
+            pitchAudioBtn.classList.add('active');
+        });
+
+        // 音色
+        const timbreGroup = document.getElementById('timbreGroup');
+        const timbrePlayBtn = document.getElementById('timbrePlayBtn');
+        const timbreAudioBtn = document.getElementById('timbreAudioBtn');
+
+        timbreGroup.addEventListener('click', (e) => {
+            const btn = e.target.closest('.timbre-btn');
+            if (!btn) return;
+            // 更新选中状态
+            document.querySelectorAll('.timbre-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const wave = btn.dataset.wave;
+            visualState.timbre.waveType = wave;
+            // 如果正在播放，实时切换波形
+            if (audioState.timbre.on && audioState.timbre.osc && audioCtx) {
+                audioState.timbre.osc.type = wave;
+            }
+        });
+
+        timbrePlayBtn.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (audioState.timbre.on) {
+                stopAudioFor('timbre');
+                timbrePlayBtn.textContent = '▶️ 试听';
+                timbrePlayBtn.classList.remove('active');
+            } else {
+                startAudioFor('timbre');
+                timbrePlayBtn.textContent = '⏹️ 停止';
+                timbrePlayBtn.classList.add('active');
+            }
+        });
+
+        timbreAudioBtn.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (audioState.timbre.on) {
+                stopAudioFor('timbre');
+                timbrePlayBtn.textContent = '▶️ 试听';
+                timbrePlayBtn.classList.remove('active');
+            }
+            timbreAudioBtn.textContent = '🔊 音频开';
+            timbreAudioBtn.classList.remove('audio-off');
+            timbreAudioBtn.classList.add('active');
+        });
+
+        // 音长
+        const durationSlider = document.getElementById('durationSlider');
+        const durationValue = document.getElementById('durationValue');
+        const durationPlayBtn = document.getElementById('durationPlayBtn');
+        const durationAudioBtn = document.getElementById('durationAudioBtn');
+        const rhythmDots = document.getElementById('rhythmDots');
+
+        // 创建节奏点 (10个)
+        for (let i = 0; i < 10; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'rhythm-dot';
+            dot.dataset.index = i;
+            rhythmDots.appendChild(dot);
+        }
+
+        function updateDurationUI() {
+            const dots = rhythmDots.querySelectorAll('.rhythm-dot');
+            dots.forEach((dot, i) => {
+                if (visualState.duration.playing) {
+                    const progress = visualState.duration.progress;
+                    const threshold = (i + 1) / 10;
+                    dot.classList.toggle('active', progress >= (i / 10) && progress < threshold);
+                } else {
+                    // 暂停时显示已持续比例
+                    const ratio = visualState.duration.duration / 100;
+                    dot.classList.toggle('active', (i / 10) < ratio);
+                }
+            });
+        }
+
+        durationSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            visualState.duration.duration = val / 100 * 3; // 映射到 0.03s - 3s，但滑块1-100 -> 0.03-3
+            // 实际上滑块1-100, 我们映射到 0.2s - 3s 更合理
+            const dur = 0.2 + (val - 1) / 99 * 2.8;
+            visualState.duration.duration = dur;
+            durationValue.textContent = dur.toFixed(1) + ' s';
+            updateDurationUI();
+        });
+
+        // 初始化音长
+        visualState.duration.duration = 0.2 + (50 - 1) / 99 * 2.8;
+        durationValue.textContent = visualState.duration.duration.toFixed(1) + ' s';
+        updateDurationUI();
+
+        durationPlayBtn.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (visualState.duration.playing) {
+                // 停止
+                stopDurationAudio();
+                durationPlayBtn.textContent = '▶️ 试听';
+                durationPlayBtn.classList.remove('active');
+            } else {
+                // 开始
+                visualState.duration.playing = true;
+                visualState.duration.progress = 0;
+                startAudioFor('duration');
+                durationPlayBtn.textContent = '⏹️ 停止';
+                durationPlayBtn.classList.add('active');
+                // 设置定时器在时长结束后停止
+                if (audioState.duration.timeoutId) clearTimeout(audioState.duration.timeoutId);
+                audioState.duration.timeoutId = setTimeout(() => {
+                    stopDurationAudio();
+                    durationPlayBtn.textContent = '▶️ 试听';
+                    durationPlayBtn.classList.remove('active');
+                    updateDurationUI();
+                }, visualState.duration.duration * 1000);
+            }
+        });
+
+        durationAudioBtn.addEventListener('click', () => {
+            if (!audioCtx) initAudio();
+            if (visualState.duration.playing) {
+                stopDurationAudio();
+                durationPlayBtn.textContent = '▶️ 试听';
+                durationPlayBtn.classList.remove('active');
+            }
+            durationAudioBtn.textContent = '🔊 音频开';
+            durationAudioBtn.classList.remove('audio-off');
+            durationAudioBtn.classList.add('active');
+        });
+
+        // 全局音量控制（简化，直接使用masterGain）
+        // 我们可以在每个特性中独立控制，masterGain固定为0.6
+
+        // 启动动画
+        animate();
+
+        // 初始化时更新一下音长UI
+        setTimeout(updateDurationUI, 100);
+
+        // 拖动滑块时如果处于播放状态，实时更新节奏点
+        durationSlider.addEventListener('input', () => {
+            updateDurationUI();
+        });
+
+        // 启动时自动激活音频（需要用户交互，我们通过点击事件激活）
+        // 如果用户想直接听到声音，需要先点击页面或按钮
+        // 按钮点击时会触发 initAudio
+
+        // 额外：为了教学展示，我们可以让页面加载后如果用户点击任意按钮就激活音频
+        // 已经通过 enableAudioOnFirstClick 处理
+
+        // 修复：当拖动滑块时，如果音频播放中，频率实时变化已在input事件处理
+        // 音色实时切换已处理
+
+        // 停止所有音频（当页面卸载时）
+        window.addEventListener('beforeunload', () => {
+            ['volume', 'pitch', 'timbre', 'duration'].forEach(type => {
+                stopAudioFor(type);
+            });
+        });
+    })();
+</script>
+</body>
+</html>
